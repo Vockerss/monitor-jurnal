@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Monitoring Jurnal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables untuk Tema Gelap */
+        :root {
+            --bg-color: #1a202c;
+            --card-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --subtle-text: #a0aec0;
+            --border-color: #4a5568;
+            --accent-color: #4299e1;
+            --accent-hover: #2b6cb0;
+            --status-normal: #38a169;
+            --status-down: #e53e3e;
+            --status-rusak: #d69e2e;
+            --status-unknown: #718096;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        /* Reset & Global Styles */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
+
+        /* Layout Utama */
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; }
+        header { text-align: center; margin-bottom: 2.5rem; }
+        h1 { font-size: 2.5rem; font-weight: 700; color: var(--text-color); }
+        header p { font-size: 1.1rem; color: var(--subtle-text); margin-top: 0.5rem; }
+        main { background-color: var(--card-bg); padding: 2rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); }
+        h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
+
+        /* Fitur Search */
+        .search-container { margin-bottom: 1.5rem; }
+        #searchInput {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-size: 1rem;
+            color: var(--text-color);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.4);
+        }
+
+        /* Daftar Host */
+        ul { list-style-type: none; }
+        li.host-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 1rem; transition: all 0.2s ease-in-out; }
+        li.host-item:hover { transform: translateY(-2px); border-color: var(--accent-color); }
+        .host-info { display: flex; align-items: center; gap: 1rem; min-width: 0; }
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .host-url { color: var(--subtle-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .delete-btn { background-color: transparent; color: var(--status-down); text-decoration: none; padding: 0.5em 1em; border-radius: 6px; font-size: 0.9em; font-weight: 500; border: 1px solid var(--status-down); transition: all 0.2s ease; }
+        .delete-btn:hover { background-color: var(--status-down); color: white; }
+        .status-NORMAL { background-color: var(--status-normal); }
+        .status-DOWN { background-color: var(--status-down); }
+        .status-RUSAK { background-color: var(--status-rusak); }
+        .status-BELUM_DICEK { background-color: var(--status-unknown); }
+        
+        /* Form Tambah Host */
+        form { margin-top: 2rem; display: flex; gap: 0.75rem; }
+        input[type="text"].add-host-input { flex-grow: 1; padding: 0.75rem 1rem; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; font-family: var(--font-family); font-size: 1rem; color: var(--text-color); transition: border-color 0.2s, box-shadow 0.2s; }
+        input[type="text"].add-host-input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.4); }
+        input[type="submit"] { background: var(--accent-color); color: var(--card-bg); font-weight: 700; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: background-color 0.2s; }
+        input[type="submit"]:hover { background: var(--accent-hover); }
+
+        /* Flash & Footer */
+        .flash { padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px; border: 1px solid transparent; }
+        .flash.success { border-color: #38a169; background-color: #2f855a; color: #f0fff4; }
+        .flash.error { border-color: #e53e3e; background-color: #c53030; color: #fff5f5; }
+        .flash.warning { border-color: #d69e2e; background-color: #b7791f; color: #fffaf0; }
+        footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--subtle-text); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard Monitoring</h1>
+            <p>Sistem Pemantauan Status Jurnal Universitas Lampung</p>
+        </header>
+
+        <main>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <h2>Daftar Host</h2>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" onkeyup="searchHost()" placeholder="Cari jurnal...">
+            </div>
+
+            <ul id="hostList">
+                {% for item in hosts_data %}
+                <li class="host-item">
+                    <div class="host-info">
+                        <div class="status-dot status-{{ item.status }}"></div>
+                        <span class="host-url">{{ item.url }}</span>
+                    </div>
+                    <a href="{{ url_for('hapus_host', host_url=item.url) }}" class="delete-btn" onclick="return confirm('Anda yakin ingin menghapus host ini?');">Hapus</a>
+                </li>
+                {% else %}
+                <li class="host-item">Tidak ada host untuk ditampilkan.</li>
+                {% endfor %}
+            </ul>
+
+            <form action="/" method="post">
+                <input type="text" name="host" class="add-host-input" placeholder="https://jurnal.contoh.ac.id" required>
+                <input type="submit" value="Tambah Host">
+            </form>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Muhammad Niko Baihaqqi. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        function searchHost() {
+            // 1. Ambil elemen-elemen yang dibutuhkan dari HTML
+            let input = document.getElementById('searchInput');
+            let filter = input.value.toLowerCase(); // Ambil teks pencarian -> ubah ke huruf kecil
+            let ul = document.getElementById('hostList');
+            let li = ul.getElementsByTagName('li');
+
+            // 2. Loop melalui setiap item di dalam daftar
+            for (let i = 0; i < li.length; i++) {
+                // Ambil elemen span yang berisi URL di dalam item
+                let urlSpan = li[i].getElementsByClassName('host-url')[0];
+                if (urlSpan) {
+                    let urlText = urlSpan.textContent || urlSpan.innerText;
+                    // 3. Cek apakah URL mengandung teks pencarian
+                    if (urlText.toLowerCase().indexOf(filter) > -1) {
+                        // Jika cocok, tampilkan item
+                        li[i].style.display = "";
+                    } else {
+                        // Jika tidak cocok, sembunyikan item
+                        li[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

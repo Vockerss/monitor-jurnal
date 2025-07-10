@@ -1,0 +1,12 @@
+# Folder virtual environment Python
+.venv/
+__pycache__/
+
+# Folder cache status yang dibuat saat runtime
+status_cache/
+
+# File data pengguna. Sediakan contohnya saja.
+host_list.txt
+
+# File backup yang dibuat oleh 'sed'
+*.bak
