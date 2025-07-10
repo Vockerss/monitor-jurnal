@@ -1,52 +1,102 @@
-# Dashboard Monitoring Jurnal
+# Dashboard Monitoring Jurnal OJS
 
-Sistem lengkap untuk memantau status situs web Jurnal OJS (Open Journal Systems) secara real-time. Dilengkapi dengan notifikasi WhatsApp instan dan laporan berkala.
+![Lisensi](https://img.shields.io/badge/license-MIT-blue.svg) ![Python](https://img.shields.io/badge/Python-3.7+-yellow.svg) ![Framework](https://img.shields.io/badge/Framework-Flask-green.svg) ![Shell](https://img.shields.io/badge/Shell-Bash-lightgrey.svg)
 
-## Fitur Utama
-- **Monitoring Real-time**: Mengecek status situs (NORMAL, DOWN, RUSAK) secara berkala.
-- **Notifikasi WhatsApp**: Mengirim alert instan via Ultramsg jika status situs berubah.
-- **Laporan Berkala**: Mengirimkan ringkasan status semua situs setiap 30 menit.
-- **Dashboard Web**: Antarmuka web modern (Dark Mode) untuk menambah, menghapus, mencari, dan melihat status semua host.
-- **Manajemen Aman**: Kredensial API dikelola menggunakan environment variables.
+Sistem pemantauan status Jurnal OJS (Open Journal Systems) secara *real-time* dengan notifikasi WhatsApp instan dan antarmuka web modern untuk manajemen.
 
-## Struktur Proyek
-- `monitor.sh`: Skrip utama untuk melakukan monitoring di latar belakang.
-- `dashboard.py`: Server web Flask untuk antarmuka dashboard.
-- `kirim_wa.py`: Skrip pembantu untuk mengirim notifikasi WhatsApp.
-- `templates/index.html`: File frontend untuk dashboard.
-- `host_list.txt.example`: Contoh format untuk daftar host.
-- `.gitignore`: Mengabaikan file yang tidak perlu.
+![Screenshot Dashboard](https://i.imgur.com/G5v3Lpl.png)
 
-## Pengaturan (Setup)
-1.  **Clone repositori:**
+---
+
+## 🌟 Tentang Proyek
+
+Proyek ini dibuat untuk mengatasi masalah umum yang dihadapi oleh pengelola jurnal online, yaitu situs yang tiba-tiba tidak dapat diakses (down) atau lebih buruk lagi, tampilannya berubah karena diretas (terkena iklan judi, dll). Sistem ini memberikan peringatan dini langsung ke WhatsApp Anda, memungkinkan respons yang cepat untuk mengatasi masalah.
+
+Dashboard web yang disediakan mempermudah manajemen daftar jurnal yang ingin dipantau tanpa perlu menyentuh kode atau terminal.
+
+---
+
+## ✨ Fitur
+
+- **Monitoring Real-time**: Mengecek status situs (NORMAL, DOWN, atau RUSAK) secara berkala setiap 60 detik.
+- **Notifikasi WhatsApp Instan**: Mengirim *alert* langsung via Ultramsg API jika status situs berubah.
+- **Laporan Berkala**: Mengirimkan ringkasan status semua situs setiap 30 menit untuk pemantauan pasif.
+- **Dashboard Web Modern**: Antarmuka web yang bersih, responsif, dan memiliki tema gelap untuk menambah, menghapus, serta melihat status semua host.
+- **Fitur Pencarian**: Mempermudah menemukan jurnal spesifik pada dashboard saat daftar sudah panjang.
+- **Manajemen Kredensial yang Aman**: Token API dan informasi sensitif lainnya dikelola menggunakan *environment variables* dan tidak disimpan dalam kode.
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+* **Backend**: Python 3
+* **Framework Web**: Flask
+* **Skrip Monitoring**: Bash Shell
+* **Notifikasi**: Ultramsg WhatsApp API
+* **Frontend**: HTML5, CSS3, JavaScript (untuk pencarian)
+
+---
+
+## 🚀 Memulai
+
+Untuk menjalankan proyek ini di lingkungan lokal Anda, ikuti langkah-langkah di bawah ini.
+
+### Prasyarat
+
+Pastikan Anda sudah menginstal:
+* Python (versi 3.7 atau lebih baru)
+* Git
+
+### Instalasi
+
+1.  **Clone repositori ini:**
     ```bash
-    git clone [URL_REPO_ANDA]
-    cd [NAMA_FOLDER]
+    git clone [URL_REPO_GITHUB_ANDA]
+    cd [NAMA_FOLDER_PROYEK]
     ```
-2.  **Buat Virtual Environment Python:**
+2.  **Buat dan aktifkan Virtual Environment Python:**
     ```bash
+    # Membuat environment
     python -m venv .venv
-    source .venv/bin/activate  # atau .venv\Scripts\activate di Windows
+
+    # Mengaktifkan di Windows (Git Bash)
+    source .venv/Scripts/activate
+
+    # Mengaktifkan di macOS/Linux
+    # source .venv/bin/activate
     ```
-3.  **Install dependensi:**
+3.  **Install semua dependensi yang dibutuhkan:**
     ```bash
-    pip install Flask requests
+    pip install -r requirements.txt
     ```
-4.  **Siapkan daftar host:**
-    Salin `host_list.txt.example` menjadi `host_list.txt` dan isi dengan URL jurnal Anda.
+    *(Pastikan Anda sudah membuat file `requirements.txt`)*
+
+4.  **Siapkan file konfigurasi:**
+    Salin file contoh untuk environment dan daftar host.
     ```bash
+    cp .env.example .env
     cp host_list.txt.example host_list.txt
     ```
-5.  **Atur Environment Variables:**
-    ```bash
-    export ULTRMSG_INSTANCE_ID="instanceXXXXX"
-    export ULTRMSG_TOKEN="tokenXXXXX"
-    export WA_TUJUAN="628XXXXXXXXXX"
-    ```
+5.  **Edit file `.env` dan `host_list.txt`:**
+    Buka file `.env` dan isi dengan kredensial Ultramsg Anda. Buka `host_list.txt` dan isi dengan URL jurnal yang ingin dipantau.
 
-## Cara Menjalankan
-Anda perlu menjalankan dua proses di dua terminal terpisah.
+---
+
+## ⚙️ Konfigurasi
+
+Semua konfigurasi sensitif disimpan dalam file `.env`.
+
+-   `ULTRAMSG_INSTANCE_ID`: Instance ID dari akun Ultramsg Anda.
+-   `ULTRAMSG_TOKEN`: Token untuk otentikasi API.
+-   `WA_TUJUAN`: Nomor WhatsApp tujuan notifikasi (format internasional, cth: 6281234567890).
+
+---
+
+## Usage
+
+Anda perlu menjalankan dua proses secara bersamaan di **dua terminal terpisah**. Pastikan Anda sudah mengaktifkan *virtual environment* di kedua terminal tersebut.
 
 **Terminal 1: Jalankan Monitor**
+Skrip ini akan berjalan di latar belakang dan melakukan pengecekan.
 ```bash
 ./monitor.sh
