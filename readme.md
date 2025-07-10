@@ -4,8 +4,6 @@
 
 Sistem pemantauan status Jurnal OJS (Open Journal Systems) secara *real-time* dengan notifikasi WhatsApp instan dan antarmuka web modern untuk manajemen.
 
-![Screenshot Dashboard](https://i.imgur.com/G5v3Lpl.png)
-
 ---
 
 ## 🌟 Tentang Proyek
