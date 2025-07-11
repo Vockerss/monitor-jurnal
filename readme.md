@@ -84,11 +84,15 @@ Pastikan Anda sudah menginstal:
 
 Semua konfigurasi sensitif disimpan dalam file `.env`.
 
--   `ULTRAMSG_INSTANCE_ID`: Instance ID dari akun Ultramsg Anda.
--   `ULTRAMSG_TOKEN`: Token untuk otentikasi API.
--   `WA_TUJUAN`: Nomor WhatsApp tujuan notifikasi (format internasional, cth: 6281234567890).
+-     export ULTRMSG_INSTANCE_ID="instance130590"
+-     export ULTRMSG_TOKEN="dnc6ck4w5mw448ep"
+-     export WA_TUJUAN="628"
 
 ---
+
+Ini adalah perintah yang dirancang khusus untuk mengubah format file dari gaya Windows ke gaya Linux.
+
+-     dos2unix host_list.txt
 
 ## Usage
 
