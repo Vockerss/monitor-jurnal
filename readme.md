@@ -83,11 +83,10 @@ Pastikan Anda sudah menginstal:
 ## ⚙️ Konfigurasi
 
 Semua konfigurasi sensitif disimpan dalam file `.env`.
-    ```bash
-        export ULTRMSG_INSTANCE_ID="instance130590"
-      export ULTRMSG_TOKEN="dnc6ck4w5mw448ep"
-      export WA_TUJUAN="628"    
-    ```
+
+-     export ULTRMSG_INSTANCE_ID="instance130590"
+-     export ULTRMSG_TOKEN="dnc6ck4w5mw448ep"
+-     export WA_TUJUAN="628"    
 ---
 
 Ini adalah perintah yang dirancang khusus untuk mengubah format file dari gaya Windows ke gaya Linux.
