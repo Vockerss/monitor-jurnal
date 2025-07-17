@@ -101,3 +101,8 @@ Anda perlu menjalankan dua proses secara bersamaan di **dua terminal terpisah**.
 Skrip ini akan berjalan di latar belakang dan melakukan pengecekan.
 ```bash
 ./monitor.sh
+
+```
+**Terminal 2 : Jalankan Dashboard**
+```python
+python dashboard.py
